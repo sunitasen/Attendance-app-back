@@ -10,8 +10,8 @@ import psycopg2
 try:
 
     connection = psycopg2.connect(user = "postgres",
-                                password = "password",
-                                host = "127.0.0.1",
+                                password = "",
+                                host = "postgresql-concave-42563",
                                 port = "5432",
                                 database = "Attendance")
     cursor = connection.cursor()
