@@ -72,6 +72,7 @@ def addRoutine():
 @app.route('/addsubject',methods=['GET', 'POST'])
 def addsubject():
     content = request.json
+    a = 9
     code = "'" + content["code"] + "',"
     name = "'" + content["name"] + "')"
     query = "insert into subject values(" + code + name 
