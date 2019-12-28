@@ -2,18 +2,16 @@ import flask
 from markdown import markdown
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+import os
 import requests
 import time
 from datetime import datetime
 import psycopg2
 
 try:
+    DATABASE_URL = os.environ['DATABASE_URL']
 
-    connection = psycopg2.connect(user = "postgres",
-                                password = "",
-                                host = "postgresql-concave-42563",
-                                port = "5432",
-                                database = "Attendance")
+    connection = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = connection.cursor()
 except (Exception, psycopg2.DatabaseError) as error :
     print ("Error while connecting PostgreSQL", error)
