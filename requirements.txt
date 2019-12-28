@@ -1,0 +1,8 @@
+flask
+bs4
+markdown
+flask_cors
+requests
+psycopg2
+datetime
+gunicorn
