@@ -12,7 +12,6 @@ try:
     DATABASE_URL = os.environ['DATABASE_URL']
 
     connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = connection.cursor()
 except (Exception, psycopg2.DatabaseError) as error :
     print ("Error while connecting PostgreSQL", error)
 
@@ -28,7 +27,7 @@ def getTeacherRoutine():
     content = request.json
     id = content["id"]
     query = "select * from routine where teacher_id=" + "'" + id + "'"
-    print(query)
+    cursor = connection.cursor()
     cursor.execute(query)
     data = cursor.fetchall()
     sub = ""
@@ -44,7 +43,7 @@ def getTeacherRoutine():
         arg = str(i)
         dat[i] = dict
         i+=1
-    
+    cursor.close()
     retobj = {"data": dat}
 
     return jsonify(retobj)
@@ -52,6 +51,7 @@ def getTeacherRoutine():
 @app.route('/addRoutine',methods=['GET', 'POST'])
 def addRoutine():
     content = request.json
+    cursor = connection.cursor()
     t_id = "'" + content["teacher_id"] + "',"
     sub = "'" + content["subject_code"] + "',"
     clas = "'" + content["class_code"] + "',"
@@ -66,13 +66,15 @@ def addRoutine():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+    
+    cursor.close()
 
     return jsonify(retobj)
 
 @app.route('/addsubject',methods=['GET', 'POST'])
 def addsubject():
     content = request.json
-    a = 9
+    cursor = connection.cursor()
     code = "'" + content["code"] + "',"
     name = "'" + content["name"] + "')"
     query = "insert into subject values(" + code + name 
@@ -83,12 +85,15 @@ def addsubject():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+    
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/addClass',methods=['GET', 'POST'])
 def addClass():
     content = request.json
+    cursor = connection.cursor()
     code = "'" + content["code"] + "',"
     name = "'" + content["name"] + "')"
     query = "insert into class values(" + code + name  
@@ -99,12 +104,15 @@ def addClass():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+    
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/addTeacher',methods=['GET', 'POST'])
 def addTeacher():
     content = request.json
+    cursor = connection.cursor()
     code = "'" + content["id"] + "',"
     name = "'" + content["name"] + "',"
     department = "'" + content["department"] + "')"
@@ -116,12 +124,15 @@ def addTeacher():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/addStudent',methods=['GET', 'POST'])
 def addStudent():
     content = request.json
+    cursor = connection.cursor()
     code = content["code"] 
     id = "'" + content["id"] + "',"
     name = "'" + content["name"] + "')"
@@ -134,12 +145,15 @@ def addStudent():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/createClass',methods=['GET', 'POST'])
 def createClass():
     content = request.json
+    cursor = connection.cursor()
     code = content["code"] 
     query = "create table " + code + " (id varchar(20), name varchar(20))"
     print(query)
@@ -150,12 +164,15 @@ def createClass():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+    
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/addAttendance',methods=['GET', 'POST'])
 def addAttendance():
     content = request.json
+    cursor = connection.cursor()
     date = "dt_" + str(content['date'])
     code = content['code']
     query = "Alter table " + code + " add column " + date  + " int " + "Default(0)"
@@ -167,6 +184,8 @@ def addAttendance():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+
+    cursor.close()
 
     return jsonify(retobj)
 
