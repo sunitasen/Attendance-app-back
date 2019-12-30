@@ -27,6 +27,7 @@ def getTeacherRoutine():
     content = request.json
     id = content["id"]
     query = "select * from routine where teacher_id=" + "'" + id + "'"
+    cursor = connection.cursor()
     print(query)
     cursor.execute(query)
     data = cursor.fetchall()
@@ -46,11 +47,14 @@ def getTeacherRoutine():
     
     retobj = {"data": dat}
 
+    cursor.close()
+
     return jsonify(retobj)
 
 @app.route('/addRoutine',methods=['GET', 'POST'])
 def addRoutine():
     content = request.json
+    cursor = connection.cursor()
     t_id = "'" + content["teacher_id"] + "',"
     t_id1 ="'" + content["teacher_id"] + "'"
     t_id2 = content["teacher_id"]
@@ -92,6 +96,7 @@ def addRoutine():
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
     
+    cursor.close()
 
 
     return jsonify(retobj)
@@ -99,6 +104,7 @@ def addRoutine():
 @app.route('/addsubject',methods=['GET', 'POST'])
 def addsubject():
     content = request.json
+    cursor = connection.cursor()
     code = "'" + content["code"] + "',"
     name = "'" + content["name"] + "')"
     query = "insert into subject values(" + code + name 
@@ -109,12 +115,15 @@ def addsubject():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+    
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/addClass',methods=['GET', 'POST'])
 def addClass():
     content = request.json
+    cursor = connection.cursor()
     code = "'" + content["code"] + "',"
     name = "'" + content["name"] + "')"
     query = "insert into class values(" + code + name  
@@ -126,11 +135,13 @@ def addClass():
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
         
+    cursor.close()
     return jsonify(retobj)
 
 @app.route('/addTeacher',methods=['GET', 'POST'])
 def addTeacher():
     content = request.json
+    cursor = connection.cursor()
     code = "'" + content["id"] + "',"
     name = "'" + content["name"] + "',"
     department = "'" + content["department"] + "')"
@@ -142,12 +153,15 @@ def addTeacher():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/addStudent',methods=['GET', 'POST'])
 def addStudent():
     content = request.json
+    cursor = connection.cursor()
     code = content["code"] 
     id = "'" + content["id"] + "',"
     name = "'" + content["name"] + "')"
@@ -160,12 +174,16 @@ def addStudent():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+
+    
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/createClass',methods=['GET', 'POST'])
 def createClass():
     content = request.json
+    cursor = connection.cursor()
     code = content["code"] 
     query = "create table " + code + " (id varchar(20), name varchar(20), total integer default(0))"
     print(query)
@@ -176,12 +194,15 @@ def createClass():
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
+
+    cursor.close()
         
     return jsonify(retobj)
 
 @app.route('/addAttendancedate',methods=['GET', 'POST'])
 def addAttendancedate():
     content = request.json
+    cursor = connection.cursor()
     date = "dt_" + str(content['date'])
     clas = content['class_code'].lower()
     t_id = content['teacher_id'].lower()
@@ -197,11 +218,14 @@ def addAttendancedate():
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
 
+    cursor.close()
+
     return jsonify(retobj)
 
 @app.route('/addAttendance',methods=['GET', 'POST'])
 def addAttendance():
     content = request.json
+    cursor = connection.cursor()
     date = "dt_" + str(content['date'])
     clas = content['class_code'].lower()
     t_id = content['teacher_id'].lower()
@@ -219,11 +243,14 @@ def addAttendance():
         print ("Error while connecting PostgreSQL table", error)
         retobj = {"status": "Error"}
 
+    cursor.close()
+
     return jsonify(retobj)
 
 @app.route('/returnattendance',methods=['GET', 'POST'])
 def returnAttendance():
     content = request.json
+    cursor = connection.cursor()
     clas = content['class_code'].lower()
     t_id = content['teacher_id']
     s_id = "'" + content['student_id'] + "'"
@@ -242,10 +269,10 @@ def returnAttendance():
     col = d2[0][0] - 3
     ans = (tot/col)*100
 
-
     connection.commit()
     retobj = {"percent": ans}
     
+    cursor.close()
 
     return jsonify(retobj)
 
