@@ -31,6 +31,9 @@ def getTeacherRoutine():
     print(query)
     cursor.execute(query)
     data = cursor.fetchall()
+    if(len(data)==0):
+        retobj = {"status": "Routine of this teacher does not exist"}
+        return jsonify(retobj)
     sub = ""
     clas = ""
     day = ""
